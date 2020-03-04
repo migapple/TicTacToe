@@ -12,7 +12,6 @@ struct ContentView: View {
     @State private var activePlayer = 1 // Croix
     @State private var gameState = Array(repeating: 0, count: 9)
     @State private var affichePion = Array(repeating: "Vide", count: 9)
-    @State private var aiDeciding = false
     
     let winningCombinations = [[0,1,2],[3,4,5],[6,7,8],[0,3,6],[1,4,7],[2,5,8],[0,4,8],[2,4,6]]
     @State private var gameIsActive = true
@@ -20,6 +19,8 @@ struct ContentView: View {
     @State private var affichage = "Tic Tac Toe"
     @State private var gameEnded = false
     @State private var pion = "Vide"
+    @State private var joueur = 0
+    @State private var ordi = 0
     
     var body: some View {
         ZStack {
@@ -177,21 +178,23 @@ struct ContentView: View {
     }
     
     func ordinateur() {
-        self.activePlayer = 2
-        // On regarde s'il reste des places non jouées
-        for gameState in self.gameState {
-            if gameState == 0 {
-                self.gameIsActive = true
-                break
+        if ordi == 0 && gameIsActive {
+            self.activePlayer = 2
+            // On regarde s'il reste des places non jouées
+            for gameState in self.gameState {
+                if gameState == 0 {
+                    self.gameIsActive = true
+                    break
+                }
             }
-        }
-        
-        while true {
-            let ordi = Int.random(in: 0...self.gameState.count - 1)
-            if self.gameState[ordi] == 0 {
-                self.activePlayer = 2
-                self.traiteBouton(ordi)
-                break
+            
+            while true {
+                let ordi = Int.random(in: 0...self.gameState.count - 1)
+                if self.gameState[ordi] == 0 {
+                    self.activePlayer = 2
+                    self.traiteBouton(ordi)
+                    break
+                }
             }
         }
     }
@@ -199,15 +202,23 @@ struct ContentView: View {
     func traiteBouton(_ bouton: Int) {
         // On verifie que l'on n'a pas joué à cet endroit
         if gameState[bouton] == 0 && gameIsActive == true {
-            // On met le player dans gameState
-            self.gameState[bouton] = activePlayer
-            if (self.activePlayer == 1) {
+            
+            
+            if (self.activePlayer == 1) && joueur == 0 {
+                // On met le player dans gameState
+                self.gameState[bouton] = activePlayer
                 self.affichePion[bouton] = "Croix"
-//                self.activePlayer = 2
+                joueur = 1
+                ordi = 0
             }
-            else {
+            
+            if self.activePlayer == 2 && ordi == 0 {
+                // On met le player dans gameState
+                self.gameState[bouton] = activePlayer
                 self.affichePion[bouton] = "Rond"
                 self.activePlayer = 1
+                ordi = 1
+                joueur = 0
             }
         }
         
@@ -228,7 +239,6 @@ struct ContentView: View {
                 } else {
                     // Nought has won
                     affichage = "Les ronds on gagné"
-                    
                 }
             }
         }
