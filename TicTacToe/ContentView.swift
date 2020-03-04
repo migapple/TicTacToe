@@ -167,10 +167,36 @@ struct ContentView: View {
                     Button(action: {
                         self.ordinateur()
                     }) {
-                        Text("Ordi")
-                        .font(.system(size: 6))
-                        .padding(.top, 20)
-                        .clipped()
+                        
+                        if !gameIsActive {
+                            Text("")
+                                .font(.system(size: 6))
+                                .padding(.top, 20)
+                                .clipped()
+                        } else
+                            
+                            if self.ordi == 0 && self.joueur == 1 {
+                                Text("Ordi")
+                                    .font(.system(size: 6))
+                                    .padding(.top, 20)
+                                    .clipped()
+                            } else
+                                
+                                if self.joueur == 0 && self.ordi == 1 {
+                                    Text("Joueur")
+                                        .font(.system(size: 6))
+                                        .padding(.top, 20)
+                                        .clipped()
+                                } else 
+                                    
+                                    if self.joueur == 0 && self.ordi == 0 {
+                                        Text("Joueur/Ordi")
+                                            .font(.system(size: 6))
+                                            .padding(.top, 20)
+                                            .clipped()
+                        }
+                        
+                        
                     }
                 }
             }
